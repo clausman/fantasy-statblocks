@@ -8,6 +8,7 @@ import {
 import { build5eMonsterFromFile } from "./5eToolsImport";
 import { buildMonsterFromTetraCube } from "./TetraCubeImport";
 import { buildMonsterFromPathbuilderFile } from "./PathbuilderImport";
+import { buildMonsterFromPf2eToolsFile } from "./pf2eToolsImport";
 
 const ctx: Worker = self as any;
 
@@ -52,6 +53,11 @@ ctx.onmessage = async (event) => {
             }
             case "pathbuilder": {
                 const imported = await buildMonsterFromPathbuilderFile(file);
+                monsters.push(...(imported ?? []));
+                break;
+            }
+            case "pf2etools": {
+                const imported = await buildMonsterFromPf2eToolsFile(file);
                 monsters.push(...(imported ?? []));
                 break;
             }
