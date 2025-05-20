@@ -1,4 +1,4 @@
-import { Monster, Trait } from "index";
+import { Monster, Trait } from "../../index";
 import { ONE_ACTION, addSign, getACStats, getModifierToDiceRoll, toTitleCase } from "./pf2eMonsterToolImport";
 
 export interface Pf2eToolsCreature {
@@ -134,7 +134,7 @@ export async function buildMonsterFromPf2eToolsFile(
     });
 }
 
-function convertPf2eToolsCreatureToMonster(creature: Pf2eToolsCreature): Monster {
+export function convertPf2eToolsCreatureToMonster(creature: Pf2eToolsCreature): Monster {
     const stats: [number, number, number, number, number, number] = [
         creature.abilityMods.str,
         creature.abilityMods.dex,
