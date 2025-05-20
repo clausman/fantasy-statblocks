@@ -1,4 +1,4 @@
-import { convertPf2eToolsCreatureToMonster, Pf2eToolsCreature } from '../../src/importers/pf2eToolsImport';
+import { buildMonsterFromPf2eToolsFile, convertPf2eToolsCreatureToMonster, Pf2eToolsCreature } from '../../src/importers/pf2eToolsImport';
 import { Monster } from '../../index';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -111,5 +111,95 @@ describe('convertPf2eToolsCreatureToMonster', () => {
         expect(monster.level).toBe('Creature 1');
         expect(monster.hp).toBe(10);
         expect(monster.ac).toBe(10);
+    });
+    
+    // Test error handling: Test with invalid creature data that will cause an error
+    test('should throw an error with invalid creature data', () => {
+        const invalidCreature: any = {
+            name: 'Invalid Creature',
+            source: 'Test',
+            level: 1,
+            traits: ['medium', 'humanoid'],
+            perception: {
+                std: 0
+            },
+            abilityMods: {
+                // Missing required ability scores
+                str: 0,
+                dex: 0
+                // con, int, wis, cha are missing
+            },
+            speed: {},
+            // Missing defenses
+        };
+        
+        expect(() => {
+            convertPf2eToolsCreatureToMonster(invalidCreature);
+        }).toThrow();
+    });
+});
+
+// Test the error handling in the creature conversion loop
+describe('Error handling in creature conversion', () => {
+    test('should skip invalid creatures and process valid ones', () => {
+        // Mock console.error to capture calls
+        const originalConsoleError = console.error;
+        const mockConsoleError = jest.fn();
+        console.error = mockConsoleError;
+        
+        const monsters: any[] = [];
+        
+        // Mixed array of valid and invalid creatures
+        const creatures = [
+            // Valid creature - use correct typing
+            {
+                name: 'Valid Creature',
+                source: 'Test',
+                level: 1,
+                traits: ['medium', 'humanoid'],
+                perception: { std: 0 },
+                abilityMods: {
+                    str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0
+                },
+                speed: {},
+                defenses: {
+                    ac: { std: 10 },
+                    savingThrows: {
+                        fort: { std: 0 },
+                        ref: { std: 0 },
+                        will: { std: 0 }
+                    },
+                    hp: [{ hp: 10 }]
+                }
+            } as Pf2eToolsCreature,
+            // Invalid creature - use 'as any' to bypass type checking
+            {
+                name: 'Invalid Creature',
+                source: 'Test',
+                level: 1,
+                // Missing many required fields
+            } as any
+        ];
+        
+        // Simulate the conversion loop from buildMonsterFromPf2eToolsFile
+        for (const creatureData of creatures) {
+            try {
+                monsters.push(convertPf2eToolsCreatureToMonster(creatureData));
+            } catch (error) {
+                console.error(`Error converting creature ${creatureData.name || 'unknown'}:`, error);
+                // Skip this monster and continue with the next one
+            }
+        }
+        
+        // Restore console.error
+        console.error = originalConsoleError;
+        
+        // Verify that one monster was successfully converted
+        expect(monsters.length).toBe(1);
+        expect(monsters[0].name).toBe('Valid Creature');
+        
+        // Verify that console.error was called for the invalid creature
+        expect(mockConsoleError).toHaveBeenCalled();
+        expect(mockConsoleError.mock.calls[0][0]).toContain('Error converting creature Invalid Creature');
     });
 });

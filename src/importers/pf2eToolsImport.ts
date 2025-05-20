@@ -120,7 +120,12 @@ export async function buildMonsterFromPf2eToolsFile(
                 // The Pf2eTools format has creatures in a "creature" array
                 if (json.creature && Array.isArray(json.creature)) {
                     for (const creatureData of json.creature) {
-                        monsters.push(convertPf2eToolsCreatureToMonster(creatureData));
+                        try {
+                            monsters.push(convertPf2eToolsCreatureToMonster(creatureData));
+                        } catch (error) {
+                            console.error(`Error converting creature ${creatureData.name || 'unknown'}:`, error);
+                            // Skip this monster and continue with the next one
+                        }
                     }
                 }
 
