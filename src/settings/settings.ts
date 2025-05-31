@@ -988,6 +988,34 @@ export default class StatblockSettingTab extends PluginSettingTab {
             b.onClick(() => inputPathbuilder.click());
         });
 
+        const importPf2eTools = new Setting(importAdditional)
+            .setName("Import Pf2eTools Data")
+            .setDesc("Only import content that you own.");
+        const inputPf2eTools = createEl("input", {
+            attr: {
+                type: "file",
+                name: "pf2etools",
+                accept: ".json",
+                multiple: true
+            }
+        });
+        inputPf2eTools.onchange = async () => {
+            const { files } = inputPf2eTools;
+            if (!files?.length) return;
+            const monsters = await this.importer.import(files, "pf2etools");
+            if (monsters && monsters.length) {
+                await this.plugin.saveMonsters(monsters);
+            }
+            this.display();
+        };
+        importPf2eTools.addButton((b) => {
+            b.setButtonText("Choose File(s)").setTooltip(
+                "Import Pf2eTools Data"
+            );
+            b.buttonEl.addClass("statblock-file-upload");
+            b.buttonEl.appendChild(inputPf2eTools);
+            b.onClick(() => inputPf2eTools.click());
+        });
 
 
         const importGeneric = new Setting(importAdditional)

@@ -1,4 +1,4 @@
-import { Monster, Trait } from "index";
+import { Monster, Trait } from "../../index";
 
 
 export async function buildMonsterFromPF2EMonsterToolFile(
