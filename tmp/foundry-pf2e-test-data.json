@@ -1,0 +1,137 @@
+{
+  "entries": [
+    {
+      "_id": "test-goblin-warrior",
+      "name": "Goblin Warrior",
+      "type": "npc",
+      "system": {
+        "details": {
+          "level": {
+            "value": 1
+          },
+          "creatureType": "humanoid",
+          "alignment": {
+            "value": "CE"
+          },
+          "source": {
+            "value": "Pathfinder Monster Core"
+          }
+        },
+        "traits": {
+          "size": {
+            "value": "small"
+          },
+          "value": ["goblin", "humanoid"],
+          "rarity": {
+            "value": "common"
+          }
+        },
+        "attributes": {
+          "hp": {
+            "value": 18,
+            "max": 18
+          },
+          "ac": {
+            "value": 16
+          },
+          "perception": {
+            "value": 5,
+            "details": "darkvision"
+          },
+          "speed": {
+            "value": 25,
+            "otherSpeeds": []
+          }
+        },
+        "abilities": {
+          "str": {
+            "mod": 2
+          },
+          "dex": {
+            "mod": 3
+          },
+          "con": {
+            "mod": 1
+          },
+          "int": {
+            "mod": 0
+          },
+          "wis": {
+            "mod": 1
+          },
+          "cha": {
+            "mod": -1
+          }
+        },
+        "saves": {
+          "fortitude": {
+            "value": 6
+          },
+          "reflex": {
+            "value": 8
+          },
+          "will": {
+            "value": 4
+          }
+        },
+        "skills": {
+          "acrobatics": {
+            "value": 6
+          },
+          "athletics": {
+            "value": 5
+          },
+          "stealth": {
+            "value": 6
+          }
+        },
+        "actions": [
+          {
+            "_id": "dogslicer-attack",
+            "name": "Dogslicer",
+            "type": "strike",
+            "description": {
+              "value": "**Damage** 1d6+2 slashing"
+            },
+            "system": {
+              "actionType": {
+                "value": "strike"
+              },
+              "actions": {
+                "value": 1
+              },
+              "traits": {
+                "value": ["agile", "backstabber", "finesse"]
+              }
+            }
+          },
+          {
+            "_id": "goblin-scuttle",
+            "name": "Goblin Scuttle",
+            "type": "reaction",
+            "description": {
+              "value": "**Trigger** A goblin ally ends a move action adjacent to the goblin. **Effect** The goblin Steps."
+            },
+            "system": {
+              "actionType": {
+                "value": "reaction"
+              },
+              "actions": {
+                "value": 0
+              },
+              "traits": {
+                "value": ["move"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "_id": "test-invalid-creature",
+      "name": "Invalid Creature",
+      "type": "invalid-type",
+      "system": null
+    }
+  ]
+}

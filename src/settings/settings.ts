@@ -1017,6 +1017,35 @@ export default class StatblockSettingTab extends PluginSettingTab {
             b.onClick(() => inputPf2eTools.click());
         });
 
+        const importFoundryVttPf2e = new Setting(importAdditional)
+            .setName("Import FoundryVTT PF2e Data")
+            .setDesc("Import creature data from FoundryVTT PF2e system files.");
+        const inputFoundryVttPf2e = createEl("input", {
+            attr: {
+                type: "file",
+                name: "foundryvtt-pf2e",
+                accept: ".json,.db",
+                multiple: true
+            }
+        });
+        inputFoundryVttPf2e.onchange = async () => {
+            const { files } = inputFoundryVttPf2e;
+            if (!files?.length) return;
+            const monsters = await this.importer.import(files, "foundryvtt-pf2e");
+            if (monsters && monsters.length) {
+                await this.plugin.saveMonsters(monsters);
+            }
+            this.display();
+        };
+        importFoundryVttPf2e.addButton((b) => {
+            b.setButtonText("Choose File(s)").setTooltip(
+                "Import FoundryVTT PF2e Data"
+            );
+            b.buttonEl.addClass("statblock-file-upload");
+            b.buttonEl.appendChild(inputFoundryVttPf2e);
+            b.onClick(() => inputFoundryVttPf2e.click());
+        });
+
 
         const importGeneric = new Setting(importAdditional)
             .setName("Import Generic Data")
