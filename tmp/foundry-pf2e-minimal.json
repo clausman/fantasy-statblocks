@@ -1,0 +1,47 @@
+{
+  "name": "Test Goblin",
+  "system": {
+    "details": {
+      "level": {
+        "value": 1
+      },
+      "creatureType": "Humanoid",
+      "source": {
+        "value": "Test Source"
+      },
+      "alignment": {
+        "value": "CE"
+      }
+    },
+    "attributes": {
+      "ac": {
+        "value": 15
+      },
+      "hp": {
+        "value": 8
+      },
+      "perception": {
+        "value": 3
+      },
+      "speed": {
+        "value": "25 feet"
+      }
+    },
+    "abilities": {
+      "str": { "mod": 0 },
+      "dex": { "mod": 2 },
+      "con": { "mod": 1 },
+      "int": { "mod": -1 },
+      "wis": { "mod": 1 },
+      "cha": { "mod": 0 }
+    },
+    "saves": {
+      "fortitude": { "value": 3 },
+      "reflex": { "value": 5 },
+      "will": { "value": 3 }
+    },
+    "traits": {
+      "value": ["goblin", "humanoid", "small"]
+    }
+  }
+}
