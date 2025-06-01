@@ -1,0 +1,88 @@
+{
+  "_id": "sample123",
+  "name": "Adult Red Dragon",
+  "type": "npc",
+  "system": {
+    "details": {
+      "level": {
+        "value": 14
+      },
+      "creatureType": "Dragon",
+      "source": {
+        "value": "Pathfinder Bestiary"
+      },
+      "alignment": {
+        "value": "CE"
+      }
+    },
+    "attributes": {
+      "ac": {
+        "value": 36
+      },
+      "hp": {
+        "value": 307,
+        "max": 307
+      },
+      "perception": {
+        "value": 26
+      },
+      "speed": {
+        "value": "60 feet, fly 180 feet",
+        "otherSpeeds": [
+          {"type": "fly", "value": 180}
+        ]
+      }
+    },
+    "abilities": {
+      "str": {
+        "mod": 8
+      },
+      "dex": {
+        "mod": 2
+      },
+      "con": {
+        "mod": 6
+      },
+      "int": {
+        "mod": 4
+      },
+      "wis": {
+        "mod": 4
+      },
+      "cha": {
+        "mod": 6
+      }
+    },
+    "saves": {
+      "fortitude": {
+        "value": 28
+      },
+      "reflex": {
+        "value": 24
+      },
+      "will": {
+        "value": 26
+      }
+    },
+    "skills": {
+      "acrobatics": {
+        "value": 22
+      },
+      "arcana": {
+        "value": 27
+      },
+      "athletics": {
+        "value": 30
+      },
+      "diplomacy": {
+        "value": 28
+      },
+      "intimidation": {
+        "value": 30
+      }
+    },
+    "traits": {
+      "value": ["dragon", "fire", "large"]
+    }
+  }
+}

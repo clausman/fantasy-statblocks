@@ -3,7 +3,8 @@ import {
     buildMonsterFromAppFile,
     buildMonsterFromCritterFile,
     buildMonsterFromImprovedInitiativeFile,
-    buildMonsterFromPF2EMonsterToolFile
+    buildMonsterFromPF2EMonsterToolFile,
+    buildMonsterFromFoundryPf2eFile
 } from ".";
 import { build5eMonsterFromFile } from "./5eToolsImport";
 import { buildMonsterFromTetraCube } from "./TetraCubeImport";
@@ -58,6 +59,11 @@ ctx.onmessage = async (event) => {
             }
             case "pf2etools": {
                 const imported = await buildMonsterFromPf2eToolsFile(file);
+                monsters.push(...(imported ?? []));
+                break;
+            }
+            case "foundryvttpf2e": {
+                const imported = await buildMonsterFromFoundryPf2eFile(file);
                 monsters.push(...(imported ?? []));
                 break;
             }
