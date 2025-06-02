@@ -73,6 +73,17 @@ describe('convertFoundryPf2eActorToMonster', () => {
         
         // Check source
         expect(monster.source).toBe('Pathfinder Monster Core');
+        
+        // Check that senses are processed correctly
+        expect(monster.perception[0].desc).toContain('darkvision');
+        expect(monster.perception[0].desc).toContain('scent');
+        
+        // Check that resistances are processed
+        expect(monster.health[0].desc).toContain('poison 5');
+        
+        // Check that attacks and abilities are present
+        expect(monster.attacks.length).toBeGreaterThan(0);
+        expect(monster.abilities_top.length + monster.abilities_mid.length + monster.abilities_bot.length).toBeGreaterThan(0);
     });
 
     test('should convert Aapoph Serpentfolk creature correctly', () => {
@@ -154,7 +165,7 @@ describe('convertFoundryPf2eActorToMonster', () => {
 });
 
 describe('Error handling in creature conversion', () => {
-    test('should skip invalid creatures and process valid ones', () => {
+    test('should skip invalid creatures and process valid ones', async () => {
         // Mock console.error to capture error messages
         const originalConsoleError = console.error;
         const mockConsoleError = jest.fn();
@@ -203,19 +214,75 @@ describe('Error handling in creature conversion', () => {
         ]);
         
         // Create a mock file
-        const mockFile = new File([mockFileContent], 'test.json', { type: 'application/json' });
+        const mockFile = new (global.File as any)([mockFileContent], 'test.json', { type: 'application/json' });
         
-        return buildMonsterFromFoundryPf2eFile(mockFile).then(monsters => {
-            // Restore console.error
-            console.error = originalConsoleError;
-            
-            // Verify that one monster was successfully converted
-            expect(monsters.length).toBe(1);
-            expect(monsters[0].name).toBe('Valid Creature');
-            
-            // Verify that console.error was called for the invalid creature
-            expect(mockConsoleError).toHaveBeenCalled();
-            expect(mockConsoleError.mock.calls[0][0]).toContain('Error converting creature Invalid Creature');
+        const monsters = await buildMonsterFromFoundryPf2eFile(mockFile);
+        
+        // Restore console.error
+        console.error = originalConsoleError;
+        
+        // Verify that one monster was successfully converted
+        expect(monsters.length).toBe(1);
+        expect(monsters[0].name).toBe('Valid Creature');
+        
+        // Verify that console.error was called for the invalid creature
+        expect(mockConsoleError).toHaveBeenCalled();
+        expect(mockConsoleError.mock.calls[0][0]).toContain('Error converting creature Invalid Creature');
+    });
+
+    test('should process single actor files', async () => {
+        const singleActorContent = JSON.stringify({
+            _id: "single1",
+            name: "Single Creature",
+            type: "npc",
+            system: {
+                abilities: {
+                    str: { mod: 3, value: 16 },
+                    dex: { mod: 1, value: 12 },
+                    con: { mod: 2, value: 14 },
+                    int: { mod: 0, value: 10 },
+                    wis: { mod: 1, value: 12 },
+                    cha: { mod: -1, value: 8 }
+                },
+                attributes: {
+                    ac: { value: 18 },
+                    hp: { value: 40, max: 40 },
+                    speed: { value: 30 }
+                },
+                details: {
+                    level: { value: 2 }
+                },
+                traits: {
+                    value: ["humanoid", "human"],
+                    size: { value: "med" }
+                },
+                saves: {
+                    fortitude: { value: 10 },
+                    reflex: { value: 8 },
+                    will: { value: 7 }
+                }
+            }
         });
+        
+        const mockFile = new (global.File as any)([singleActorContent], 'single.json', { type: 'application/json' });
+        const monsters = await buildMonsterFromFoundryPf2eFile(mockFile);
+        
+        expect(monsters.length).toBe(1);
+        expect(monsters[0].name).toBe('Single Creature');
+        expect(monsters[0].level).toBe('Creature 2');
+    });
+});
+
+describe('buildMonsterFromFoundryPf2eFile', () => {
+    test('should handle real foundry data file correctly', async () => {
+        // Use the actual foundry test data
+        const foundryContent = fs.readFileSync(path.resolve(__dirname, '../../tmp/foundry-aapoph-granitescale.json'), 'utf-8');
+        const mockFile = new (global.File as any)([foundryContent], 'foundry-test.json', { type: 'application/json' });
+        
+        const monsters = await buildMonsterFromFoundryPf2eFile(mockFile);
+        
+        expect(monsters.length).toBe(1);
+        expect(monsters[0].name).toBe('Aapoph Granitescale');
+        expect(monsters[0].level).toBe('Creature 6');
     });
 });
